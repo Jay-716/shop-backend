@@ -35,3 +35,29 @@ class UserUpdate(BaseModel):
     bio: Optional[str] = None
     password: Optional[str] = None
 
+
+class AddressRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+    postcode: Optional[str] = None
+    detail: str
+    name: str
+    phone_number: str
+    comment: Optional[str] = None
+    user_id: int
+
+
+class AddressCreate(BaseModel):
+    postcode: Optional[str] = None
+    detail: str
+    name: str
+    phone_number: str
+    comment: Optional[str] = None
+
+
+class AddressUpdate(BaseModel):
+    postcode: Optional[str] = None
+    detail: Optional[str] = None
+    name: Optional[str] = None
+    phone_number: Optional[str] = None
+    comment: Optional[str] = None
