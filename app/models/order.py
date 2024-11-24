@@ -5,9 +5,9 @@ import sqlalchemy
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from base import Base
-from user import User, Address
-from good import Good
+from .base import Base
+from .user import User, Address
+from .good import Good
 
 
 class CartItem(Base):
@@ -28,7 +28,7 @@ class Order(Base):
     __tablename__ = "order"
     id: Mapped[int] = mapped_column(sqlalchemy.types.Integer, primary_key=True, autoincrement=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
-    user: Mapped[User] = relationship(back_populates="cart_items")
+    user: Mapped[User] = relationship(back_populates="orders")
     total_price: Mapped[int] = mapped_column(sqlalchemy.types.Integer, nullable=False)
     status: Mapped[int] = mapped_column(sqlalchemy.types.SmallInteger, nullable=False, default=0)
     address_id: Mapped[int] = mapped_column(ForeignKey("address.id"))

@@ -6,8 +6,8 @@ import sqlalchemy
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from base import Base
-from store import Store
+from .base import Base
+from .store import Store
 
 
 class Good(Base):
@@ -18,10 +18,10 @@ class Good(Base):
     name: Mapped[str] = mapped_column(sqlalchemy.types.String(256), nullable=False)
     description: Mapped[str] = mapped_column(sqlalchemy.types.String(512), nullable=False)
     price: Mapped[int] = mapped_column(sqlalchemy.types.Integer, nullable=False)
-    image_id: Mapped[uuid.UUID] = mapped_column(sqlalchemy.types.Uuid)
+    image_id: Mapped[uuid.UUID] = mapped_column(sqlalchemy.types.Uuid, nullable=True)
     details: Mapped[List["GoodDetail"]] = relationship(back_populates="good")
     styles: Mapped[List["GoodStyle"]] = relationship(back_populates="good")
-    tags_link: Mapped[List["TagGoodLink"]] = relationship(back_populates="tags_link")
+    tag_links: Mapped[List["TagGoodLink"]] = relationship(back_populates="good")
     cart_items: Mapped[List["CartItem"]] = relationship(back_populates="good")
     order_item: Mapped["OrderItem"] = relationship(back_populates="good")
     created_at: Mapped[datetime.datetime] = mapped_column(sqlalchemy.types.DateTime, nullable=False,
@@ -36,8 +36,8 @@ class GoodDetail(Base):
     id: Mapped[int] = mapped_column(sqlalchemy.types.Integer, primary_key=True, autoincrement=True)
     good_id: Mapped[int] = mapped_column(ForeignKey("good.id"))
     good: Mapped[Good] = relationship(back_populates="details")
-    text: Mapped[str] = mapped_column(sqlalchemy.types.Text)
-    image_id: Mapped[uuid.UUID] = mapped_column(sqlalchemy.types.Uuid)
+    text: Mapped[str] = mapped_column(sqlalchemy.types.Text, nullable=True)
+    image_id: Mapped[uuid.UUID] = mapped_column(sqlalchemy.types.Uuid, nullable=True)
     created_at: Mapped[datetime.datetime] = mapped_column(sqlalchemy.types.DateTime, nullable=False,
                                                           insert_default=datetime.datetime.now)
     updated_at: Mapped[datetime.datetime] = mapped_column(sqlalchemy.types.DateTime, nullable=False,
@@ -51,8 +51,8 @@ class GoodStyle(Base):
     good_id: Mapped[int] = mapped_column(ForeignKey("good.id"))
     good: Mapped[Good] = relationship(back_populates="styles")
     name: Mapped[str] = mapped_column(sqlalchemy.types.String(256), nullable=False)
-    description: Mapped[str] = mapped_column(sqlalchemy.types.String(512))
-    image_id: Mapped[uuid.UUID] = mapped_column(sqlalchemy.types.Uuid)
+    description: Mapped[str] = mapped_column(sqlalchemy.types.String(512), nullable=True)
+    image_id: Mapped[uuid.UUID] = mapped_column(sqlalchemy.types.Uuid, nullable=True)
     price: Mapped[int] = mapped_column(sqlalchemy.types.Integer, nullable=False)
     created_at: Mapped[datetime.datetime] = mapped_column(sqlalchemy.types.DateTime, nullable=False,
                                                           insert_default=datetime.datetime.now)
@@ -66,8 +66,8 @@ class TagGoodLink(Base):
     id: Mapped[int] = mapped_column(sqlalchemy.types.Integer, primary_key=True, autoincrement=True)
     tag_id: Mapped[int] = mapped_column(ForeignKey("tag.id"), primary_key=True)
     good_id: Mapped[int] = mapped_column(ForeignKey("good.id"), primary_key=True)
-    tag: Mapped["Tag"] = relationship(back_populates="goods_link")
-    goods: Mapped[Good] = relationship(back_populates="tags_link")
+    tag: Mapped["Tag"] = relationship(back_populates="good_links")
+    good: Mapped[Good] = relationship(back_populates="tag_links")
     created_at: Mapped[datetime.datetime] = mapped_column(sqlalchemy.types.DateTime, nullable=False,
                                                           insert_default=datetime.datetime.now)
     updated_at: Mapped[datetime.datetime] = mapped_column(sqlalchemy.types.DateTime, nullable=False,
@@ -79,8 +79,8 @@ class Tag(Base):
     __tablename__ = "tag"
     id: Mapped[int] = mapped_column(sqlalchemy.types.Integer, primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(sqlalchemy.types.String(64), nullable=False)
-    description: Mapped[str] = mapped_column(sqlalchemy.types.String(128))
-    goods_link: Mapped[List[TagGoodLink]] = relationship(back_populates="tag")
+    description: Mapped[str] = mapped_column(sqlalchemy.types.String(128), nullable=True)
+    good_links: Mapped[List[TagGoodLink]] = relationship(back_populates="tag")
     created_at: Mapped[datetime.datetime] = mapped_column(sqlalchemy.types.DateTime, nullable=False,
                                                           insert_default=datetime.datetime.now)
     updated_at: Mapped[datetime.datetime] = mapped_column(sqlalchemy.types.DateTime, nullable=False,
