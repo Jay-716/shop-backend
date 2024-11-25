@@ -6,8 +6,8 @@ from fastapi_pagination.ext.sqlalchemy import paginate
 from sqlalchemy.orm import Session
 from sqlalchemy import select, delete, update
 
-from db import get_session
-from auth import current_user
+from app.db import get_session
+from app.auth import current_user
 from app.models import Address, User
 from app.schemas.user import AddressRead, AddressCreate, AddressUpdate, Role
 

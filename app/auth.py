@@ -11,11 +11,11 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from sqlalchemy import select, update
 
-from db import get_session
-from app.models.user import User, Role
-from app.schemas.user import UserCreate, UserRead, UserUpdate
+from .db import get_session
+from .models.user import User, Role
+from .schemas.user import UserCreate, UserRead, UserUpdate
 from config import SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES, api_root
-from log_utils import logger
+from .utils.log_utils import logger
 
 
 class Token(BaseModel):

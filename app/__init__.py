@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi_pagination import add_pagination
 
 from config import api_root, enable_doc
-from auth import auth_router
+from .auth import auth_router
 from app.routers.user import address_router
 from app.routers.store import store_router
 from app.routers.good import good_router
