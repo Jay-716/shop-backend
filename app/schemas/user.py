@@ -1,5 +1,4 @@
 import datetime
-import uuid
 from typing import Optional
 
 from pydantic import BaseModel, EmailStr, ConfigDict
@@ -14,7 +13,7 @@ class UserRead(BaseModel):
     phone_number: Optional[str] = None
     email: Optional[str] = None
     gender: int
-    avatar_id: Optional[uuid.UUID] = None
+    avatar_id: Optional[str] = None
     bio: Optional[str] = None
     role: Role
     created_at: datetime.datetime

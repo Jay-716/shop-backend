@@ -1,5 +1,4 @@
 import datetime
-import uuid
 from typing import List
 
 import sqlalchemy
@@ -17,7 +16,7 @@ class Store(Base):
     owner: Mapped[User] = relationship("User", back_populates="stores")
     name: Mapped[str] = mapped_column(sqlalchemy.types.String(256), nullable=False)
     description: Mapped[str] = mapped_column(sqlalchemy.types.String(512), nullable=False)
-    image_id: Mapped[uuid.UUID] = mapped_column(sqlalchemy.types.Uuid, nullable=True)
+    image_id: Mapped[str] = mapped_column(sqlalchemy.types.String(256), nullable=True)
     goods: Mapped[List["Good"]] = relationship(back_populates="store")
     created_at: Mapped[datetime.datetime] = mapped_column(sqlalchemy.types.DateTime, nullable=False,
                                                           insert_default=datetime.datetime.now)

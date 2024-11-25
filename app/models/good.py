@@ -1,5 +1,4 @@
 import datetime
-import uuid
 from typing import List
 
 import sqlalchemy
@@ -18,7 +17,7 @@ class Good(Base):
     name: Mapped[str] = mapped_column(sqlalchemy.types.String(256), nullable=False)
     description: Mapped[str] = mapped_column(sqlalchemy.types.String(512), nullable=False)
     price: Mapped[int] = mapped_column(sqlalchemy.types.Integer, nullable=False)
-    image_id: Mapped[uuid.UUID] = mapped_column(sqlalchemy.types.Uuid, nullable=True)
+    image_id: Mapped[str] = mapped_column(sqlalchemy.types.String(256), nullable=True)
     details: Mapped[List["GoodDetail"]] = relationship(back_populates="good")
     styles: Mapped[List["GoodStyle"]] = relationship(back_populates="good")
     tag_links: Mapped[List["TagGoodLink"]] = relationship(back_populates="good")
@@ -38,7 +37,7 @@ class GoodDetail(Base):
     good_id: Mapped[int] = mapped_column(ForeignKey("good.id"))
     good: Mapped[Good] = relationship(back_populates="details")
     text: Mapped[str] = mapped_column(sqlalchemy.types.Text, nullable=True)
-    image_id: Mapped[uuid.UUID] = mapped_column(sqlalchemy.types.Uuid, nullable=True)
+    image_id: Mapped[str] = mapped_column(sqlalchemy.types.String(256), nullable=True)
     created_at: Mapped[datetime.datetime] = mapped_column(sqlalchemy.types.DateTime, nullable=False,
                                                           insert_default=datetime.datetime.now)
     updated_at: Mapped[datetime.datetime] = mapped_column(sqlalchemy.types.DateTime, nullable=False,
@@ -53,7 +52,7 @@ class GoodStyle(Base):
     good: Mapped[Good] = relationship(back_populates="styles")
     name: Mapped[str] = mapped_column(sqlalchemy.types.String(256), nullable=False)
     description: Mapped[str] = mapped_column(sqlalchemy.types.String(512), nullable=True)
-    image_id: Mapped[uuid.UUID] = mapped_column(sqlalchemy.types.Uuid, nullable=True)
+    image_id: Mapped[str] = mapped_column(sqlalchemy.types.String(256), nullable=True)
     price: Mapped[int] = mapped_column(sqlalchemy.types.Integer, nullable=False)
     order_items: Mapped[List["OrderItem"]] = relationship(back_populates="style")
     cart_items: Mapped[List["CartItem"]] = relationship(back_populates="style")

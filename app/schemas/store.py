@@ -1,4 +1,3 @@
-import uuid
 from typing import Optional
 
 from pydantic import BaseModel, ConfigDict
@@ -10,7 +9,7 @@ class StoreRead(BaseModel):
     owner_id: int
     name: str
     description: str
-    image_id: Optional[uuid.UUID] = None
+    image_id: Optional[str] = None
 
 
 class StoreCreate(BaseModel):
@@ -22,4 +21,4 @@ class StoreCreate(BaseModel):
 class StoreUpdate(BaseModel):
     name: Optional[str] = None
     description: Optional[str] = None
-    image_id: Optional[uuid.UUID] = None
+    image_id: Optional[str] = None

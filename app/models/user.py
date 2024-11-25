@@ -1,5 +1,4 @@
 import datetime
-import uuid
 from typing import List
 from enum import IntEnum
 
@@ -23,7 +22,7 @@ class User(Base):
     phone_number: Mapped[str] = mapped_column(sqlalchemy.types.String(64), nullable=True)
     email: Mapped[str] = mapped_column(sqlalchemy.types.String(128), nullable=True)
     gender: Mapped[int] = mapped_column(sqlalchemy.types.SmallInteger, default=0)
-    avatar_id: Mapped[uuid.UUID] = mapped_column(sqlalchemy.types.Uuid, nullable=True)
+    avatar_id: Mapped[str] = mapped_column(sqlalchemy.types.String(256), nullable=True)
     bio: Mapped[str] = mapped_column(sqlalchemy.types.String(256), nullable=True)
     role: Mapped[Role] = mapped_column(sqlalchemy.types.SmallInteger, default=0)
     addresses: Mapped[List["Address"]] = relationship(back_populates="user")
