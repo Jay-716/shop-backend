@@ -23,7 +23,8 @@ class Good(Base):
     styles: Mapped[List["GoodStyle"]] = relationship(back_populates="good")
     tag_links: Mapped[List["TagGoodLink"]] = relationship(back_populates="good")
     cart_items: Mapped[List["CartItem"]] = relationship(back_populates="good")
-    order_item: Mapped["OrderItem"] = relationship(back_populates="good")
+    order_items: Mapped["OrderItem"] = relationship(back_populates="good")
+    # orders: Mapped[List["Order"]] = relationship(back_populates="goods", secondary="order_item")
     created_at: Mapped[datetime.datetime] = mapped_column(sqlalchemy.types.DateTime, nullable=False,
                                                           insert_default=datetime.datetime.now)
     updated_at: Mapped[datetime.datetime] = mapped_column(sqlalchemy.types.DateTime, nullable=False,
@@ -54,6 +55,8 @@ class GoodStyle(Base):
     description: Mapped[str] = mapped_column(sqlalchemy.types.String(512), nullable=True)
     image_id: Mapped[uuid.UUID] = mapped_column(sqlalchemy.types.Uuid, nullable=True)
     price: Mapped[int] = mapped_column(sqlalchemy.types.Integer, nullable=False)
+    order_items: Mapped[List["OrderItem"]] = relationship(back_populates="style")
+    cart_items: Mapped[List["CartItem"]] = relationship(back_populates="style")
     created_at: Mapped[datetime.datetime] = mapped_column(sqlalchemy.types.DateTime, nullable=False,
                                                           insert_default=datetime.datetime.now)
     updated_at: Mapped[datetime.datetime] = mapped_column(sqlalchemy.types.DateTime, nullable=False,

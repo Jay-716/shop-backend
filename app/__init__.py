@@ -6,6 +6,7 @@ from auth import auth_router
 from app.routers.user import address_router
 from app.routers.store import store_router
 from app.routers.good import good_router
+from app.routers.order import order_router
 
 
 app_kwargs = {}
@@ -20,3 +21,4 @@ app.include_router(auth_router)
 app.include_router(address_router)
 app.include_router(store_router)
 app.include_router(good_router)
+app.include_router(order_router)

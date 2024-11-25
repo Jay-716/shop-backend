@@ -1,7 +1,7 @@
 from .base import Base
 from .good import Good, GoodStyle, GoodDetail
 from .order import CartItem, Order, OrderItem
-from .user import User, Address
+from .user import User, Address, Role
 from .store import Store
 
 
@@ -9,6 +9,6 @@ __all__ = [
     Base,
     Good, GoodStyle, GoodDetail,
     CartItem, Order, OrderItem,
-    User, Address,
+    User, Address, Role,
     Store,
 ]
