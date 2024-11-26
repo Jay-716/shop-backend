@@ -24,27 +24,35 @@ class UploadResult(BaseModel):
     key: Optional[str] = None
 
 
-@file_router.post("/validate")
-def validate_key(key: str) -> bool:
-    if not key or key.startswith("/"):
-        return False
+@file_router.get("/validate-exist")
+def validate_key_exist(key: str) -> bool:
     storage_dst = STORAGE_PATH / key
     return storage_dst.exists() and storage_dst.is_file()
 
 
+@file_router.get("/validate")
+def validate_key(key: str) -> bool:
+    if not key or key.startswith("/"):
+        return False
+    else:
+        return True
+
+
+# TODO: validate file ids in schemas
 def key_validator(v: str) -> str:
-    assert validate_key(v), f"file key=`{v}` not exists"
+    assert validate_key(v), f"key=`{v}` invalid"
+    return v
+
+
+def key_exist_validator(v: str) -> str:
+    assert validate_key(v), f"key=`{v}` invalid"
+    assert validate_key_exist(v), f"key=`{v}` not exists"
     return v
 
 
 @file_router.post("/upload", dependencies=[Depends(current_superuser)])
-async def upload_file(file: UploadFile, key: str) -> UploadResult:
+async def upload_file(file: UploadFile, key: Annotated[str, Query(), AfterValidator(key_validator)]) -> UploadResult:
     try:
-        if not key:
-            key = str(gen_id())
-        if key.startswith("/"):
-            logger.warn(f"upload_file: invalid key: {key}")
-            return UploadResult(ok=False, err=1, msg="invalid key", key=None)
         storage_dst = STORAGE_PATH / key
         storage_dst.parent.mkdir(parents=True, exist_ok=True)
         if storage_dst.exists():
@@ -60,9 +68,9 @@ async def upload_file(file: UploadFile, key: str) -> UploadResult:
 
 
 @file_router.get("/download", dependencies=[Depends(current_user)])
-def download_file(file_id: Annotated[str, Query(), AfterValidator(key_validator)]) -> FileResponse:
+def download_file(key: Annotated[str, Query(), AfterValidator(key_exist_validator)]) -> FileResponse:
     try:
-        file_path = STORAGE_PATH / str(file_id)
+        file_path = STORAGE_PATH / str(key)
         if file_path.exists() and file_path.is_file():
             return FileResponse(file_path)
     except Exception as e:
