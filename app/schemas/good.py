@@ -3,6 +3,8 @@ from typing import Optional, List
 
 from pydantic import BaseModel, ConfigDict
 
+from .store import StoreRead
+
 
 class GoodRead(BaseModel):
     model_config = ConfigDict(from_attributes=True)
@@ -67,6 +69,7 @@ class GoodFullRead(BaseModel):
     description: str
     price: int
     image_id: Optional[str] = None
+    store: StoreRead
     details: List[GoodDetailRead]
     styles: List[GoodStyleRead]
     tag_links: List["TagGoodLinkFullRead"]
