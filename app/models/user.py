@@ -29,6 +29,7 @@ class User(Base):
     stores: Mapped[List["Store"]] = relationship("Store", back_populates="owner")
     cart_items: Mapped[List["CartItem"]] = relationship(back_populates="user")
     orders: Mapped[List["Order"]] = relationship(back_populates="user")
+    payments: Mapped[List["Payment"]] = relationship(back_populates="user")
     created_at: Mapped[datetime.datetime] = mapped_column(sqlalchemy.types.DateTime, nullable=False,
                                                           insert_default=datetime.datetime.now)
     updated_at: Mapped[datetime.datetime] = mapped_column(sqlalchemy.types.DateTime, nullable=False,

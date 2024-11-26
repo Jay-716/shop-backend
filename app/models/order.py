@@ -8,6 +8,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .base import Base
 from .user import User, Address
 from .good import Good, GoodStyle
+from .pay import Payment
 
 
 class CartItem(Base):
@@ -37,6 +38,7 @@ class Order(Base):
     address_id: Mapped[int] = mapped_column(ForeignKey("address.id"))
     address: Mapped[Address] = relationship(back_populates="orders")
     order_items: Mapped[List["OrderItem"]] = relationship(back_populates="order")
+    payment: Mapped[Payment] = relationship(back_populates="order")
     # goods: Mapped[List[Good]] = relationship(back_populates="orders", secondary="order_item")
     created_at: Mapped[datetime.datetime] = mapped_column(sqlalchemy.types.DateTime, nullable=False,
                                                           insert_default=datetime.datetime.now)

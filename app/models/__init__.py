@@ -3,6 +3,7 @@ from .good import Good, GoodStyle, GoodDetail
 from .order import CartItem, Order, OrderItem
 from .user import User, Address, Role
 from .store import Store
+from .pay import Payment
 
 
 __all__ = [
@@ -11,4 +12,5 @@ __all__ = [
     CartItem, Order, OrderItem,
     User, Address, Role,
     Store,
+    Payment,
 ]
