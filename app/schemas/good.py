@@ -1,3 +1,4 @@
+import datetime
 from typing import Optional, List
 
 from pydantic import BaseModel, ConfigDict
@@ -66,8 +67,9 @@ class GoodFullRead(BaseModel):
     description: str
     price: int
     image_id: Optional[str] = None
-    details: List[GoodDetailRead] = None
-    styles: List[GoodStyleRead] = None
+    details: List[GoodDetailRead]
+    styles: List[GoodStyleRead]
+    tag_links: List["TagGoodLinkFullRead"]
 
 
 class GoodFullCreate(BaseModel):
@@ -78,6 +80,7 @@ class GoodFullCreate(BaseModel):
     image_id: Optional[str] = None
     details: List[GoodDetailFullCreate]
     styles: List[GoodStyleFullCreate]
+    tag_ids: Optional[List[int]] = None
 
 
 class GoodFullUpdate(BaseModel):
@@ -85,5 +88,49 @@ class GoodFullUpdate(BaseModel):
     description: Optional[str] = None
     price: Optional[int] = None
     image_id: Optional[str] = None
-    details: Optional[List[GoodDetailFullCreate]] = []
-    styles: Optional[List[GoodStyleFullCreate]] = []
+    details: Optional[List[GoodDetailFullCreate]] = None
+    styles: Optional[List[GoodStyleFullCreate]] = None
+    tag_ids: Optional[List[int]] = None
+
+
+class TagRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+    name: str
+    description: Optional[str] = None
+
+
+class TagCreate(BaseModel):
+    name: str
+    description: Optional[str] = None
+
+
+class TagUpdate(BaseModel):
+    name: Optional[str] = None
+    description: Optional[str] = None
+
+
+class TagGoodLinkRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+    tag_id: int
+    good_id: int
+    created_at: datetime.datetime
+    updated_at: datetime.datetime
+
+
+class TagGoodLinkFullRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+    tag_id: int
+    tag: TagRead
+    good_id: int
+    created_at: datetime.datetime
+    updated_at: datetime.datetime
+
+
+class TagGoodLinkCreate(BaseModel):
+    tag_id: int
+    good_id: int
+
+
