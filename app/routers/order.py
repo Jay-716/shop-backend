@@ -1,6 +1,6 @@
-from typing import Dict
+from typing import Dict, Set, Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Body
 from fastapi_pagination import Page
 from fastapi_pagination.ext.sqlalchemy import paginate
 from sqlalchemy.orm import Session, joinedload
@@ -8,8 +8,8 @@ from sqlalchemy import select, update, delete
 
 from app.db import get_session
 from app.auth import current_user
-from app.models.user import User, Role
-from app.models.good import Good
+from app.models.user import User, Role, Address
+from app.models.good import Good, GoodStyle
 from app.models.order import CartItem, Order, OrderItem
 from app.schemas.order import *
 
@@ -29,7 +29,11 @@ def create_cart_item(cart_dict: CartItemCreate, user: User = Depends(current_use
     good = db.get(Good, cart_dict.good_id)
     if not good:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Good not found.")
-    cart_item = CartItem(user_id=user.id, good_id=good.id, style_id=cart_dict.style_id)
+    if cart_dict.style_id:
+        style_ids_set = set(map(lambda g: g.id, good.styles))
+        if cart_dict.style_id not in style_ids_set:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Style not found.")
+    cart_item = CartItem(user_id=user.id, good_id=good.id, style_id=cart_dict.style_id, count=cart_dict.count)
     db.add(cart_item)
     db.commit()
     db.refresh(cart_item)
@@ -143,3 +147,50 @@ def update_full_order(order_id: int, order_dict: OrderFullUpdate, user: User = D
     db.commit()
     db.refresh(order)
     return OrderFullRead.model_validate(order)
+
+
+@order_router.post("/direct-buy", summary="立即购买")
+def direct_buy_good(good_id: Annotated[int, Body()], count: Annotated[int, Body(gt=1)],
+                    address_id: Annotated[int, Body()], style_id: Annotated[Optional[int], Body()] = None,
+                    user: User = Depends(current_user), db: Session = Depends(get_session)) -> OrderFullRead:
+    good = db.get(Good, good_id)
+    address = db.get(Address, address_id)
+    # Check address.
+    if not address or (user.role != Role.Admin and address.user_id != user.id):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Address not found.")
+    # Check good.
+    if not good:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Good not found.")
+    # Check style.
+    style = None
+    if style_id:
+        style = db.get(GoodStyle, style_id)
+        if not style or style.good_id != good.id:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Style not found.")
+    # Create the order.
+    order = Order(user_id=user.id, address_id=address_id, total_price=(style.price if style else good.price) * count)
+    db.add(order)
+    db.flush()
+    db.refresh(order)
+    # Create the only order item.
+    order_item = OrderItem(order_id=order.id, good_id=good_id, style_id=style_id,
+                           count=count, price=style.price if style else good.price)
+    db.add(order_item)
+    db.commit()
+    db.refresh(order)
+    return OrderFullRead.model_validate(order)
+
+
+@order_router.post("/cart-buy", summary="购物车结算")
+def cart_buy_good(cart_item_ids: Set[int], address_id: Annotated[int, Body()], user: User = Depends(current_user),
+                  db: Session = Depends(get_session)) -> OrderFullRead:
+    cart_items = db.execute(select(CartItem).where(CartItem.id.in_(cart_item_ids))).scalars().all()
+    if len(cart_items) != len(cart_item_ids):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Cart item not found.")
+    order_item_creates = \
+        map(lambda c: OrderItemFullCreate(good_id=c.good_id, style_id=c.style_id, count=c.count), cart_items)
+    order_create = OrderFullCreate(address_id=address_id, goods=order_item_creates)
+    query = delete(CartItem).where(CartItem.id.in_(cart_item_ids))
+    db.execute(query)
+    # FIXME: Dirty hack...
+    return create_order(order_create, user, db)

@@ -1,7 +1,7 @@
 import datetime
 from typing import List, Optional
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, PositiveInt
 
 from .user import AddressRead
 from .good import GoodRead, GoodStyleRead
@@ -15,6 +15,7 @@ class CartItemRead(BaseModel):
     good: GoodRead
     style_id: Optional[int] = None
     style: Optional[GoodStyleRead] = None
+    count: PositiveInt
     created_at: datetime.datetime
     updated_at: datetime.datetime
 
@@ -22,7 +23,7 @@ class CartItemRead(BaseModel):
 class CartItemCreate(BaseModel):
     good_id: int
     style_id: Optional[int] = None
-    count: int
+    count: PositiveInt
 
 
 class OrderRead(BaseModel):
@@ -65,7 +66,7 @@ class OrderItemRead(BaseModel):
     order_id: int
     good_id: int
     style_id: Optional[int] = None
-    count: int
+    count: PositiveInt
     price: int
     created_at: datetime.datetime
     updated_at: datetime.datetime
@@ -79,7 +80,7 @@ class OrderItemFullRead(BaseModel):
     good: GoodRead
     style_id: Optional[int] = None
     style: Optional[GoodStyleRead] = None
-    count: int
+    count: PositiveInt
     price: int
     created_at: datetime.datetime
     updated_at: datetime.datetime
@@ -88,4 +89,4 @@ class OrderItemFullRead(BaseModel):
 class OrderItemFullCreate(BaseModel):
     good_id: int
     style_id: Optional[int] = None
-    count: int
+    count: PositiveInt

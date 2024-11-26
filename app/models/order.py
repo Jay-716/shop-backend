@@ -19,6 +19,7 @@ class CartItem(Base):
     good: Mapped[Good] = relationship(back_populates="cart_items")
     style_id: Mapped[int] = mapped_column(ForeignKey("good_style.id"), nullable=True)
     style: Mapped[GoodStyle] = relationship(back_populates="cart_items")
+    count: Mapped[int] = mapped_column(sqlalchemy.types.Integer, nullable=False)
     created_at: Mapped[datetime.datetime] = mapped_column(sqlalchemy.types.DateTime, nullable=False,
                                                           insert_default=datetime.datetime.now)
     updated_at: Mapped[datetime.datetime] = mapped_column(sqlalchemy.types.DateTime, nullable=False,
