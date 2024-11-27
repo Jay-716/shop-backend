@@ -1,5 +1,5 @@
 import datetime
-from typing import Optional
+from typing import Optional, List, Tuple
 
 from pydantic import BaseModel, EmailStr, ConfigDict
 
@@ -60,3 +60,11 @@ class AddressUpdate(BaseModel):
     name: Optional[str] = None
     phone_number: Optional[str] = None
     comment: Optional[str] = None
+
+
+class UserProfile(BaseModel):
+    reg_days: int
+    order_count: int
+    good_count: int
+    comment_count: int
+    timeline: List[Tuple[str, datetime.datetime]]
