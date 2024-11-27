@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 from fastapi_pagination import add_pagination
+from fastapi.middleware.cors import CORSMiddleware
 
-from config import api_root, enable_doc
+from config import api_root, enable_doc, allow_origins
 from .auth import auth_router
 from app.routers.user import address_router, user_router
 from app.routers.store import store_router
@@ -19,6 +20,13 @@ if not enable_doc:
 
 app = FastAPI(root_path=api_root, root_path_in_servers=True, **app_kwargs)
 add_pagination(app)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=allow_origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.include_router(auth_router)
 app.include_router(address_router)

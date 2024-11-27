@@ -14,3 +14,4 @@ with open("config.yaml") as config:
     LOG_STORAGE_PATH = cfg["storage"]["log_storage_path"]
     api_root = cfg["api_root"]
     enable_doc = cfg["enable_doc"]
+    allow_origins = cfg["allow_origins"]
