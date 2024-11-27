@@ -27,7 +27,7 @@ def get_random_good(db: Session = Depends(get_session)) -> List[GoodRead]:
     return db.execute(query).all()
 
 
-@good_router.get("/tag/random", dependencies=[Depends(current_user)], summary="主页获取随机tag")
+@tag_router.get("/random", dependencies=[Depends(current_user)], summary="主页获取随机tag")
 def get_random_tag(db: Session = Depends(get_session)) -> List[TagRead]:
     total_tag = db.execute(select(func.count(Tag.id))).scalar_one()
     subquery = select(Tag).offset(random.randint(1, max(total_tag - 50, 1))).limit(50).subquery()
