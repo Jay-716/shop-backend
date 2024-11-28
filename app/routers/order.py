@@ -150,7 +150,7 @@ def update_full_order(order_id: int, order_dict: OrderFullUpdate, user: User = D
 
 
 @order_router.post("/direct-buy", summary="立即购买")
-def direct_buy_good(good_id: Annotated[int, Body()], count: Annotated[int, Body(gt=1)],
+def direct_buy_good(good_id: Annotated[int, Body()], count: Annotated[int, Body(gt=0)],
                     address_id: Annotated[int, Body()], style_id: Annotated[Optional[int], Body()] = None,
                     user: User = Depends(current_user), db: Session = Depends(get_session)) -> OrderFullRead:
     good = db.get(Good, good_id)
