@@ -56,6 +56,7 @@ def get_all_order(user: User = Depends(current_user), db: Session = Depends(get_
     query = select(Order)
     if user.role != Role.Admin:
         query = query.where(Order.user_id == user.id)
+    query = query.order_by(Order.created_at.desc())
     return paginate(db, query)
 
 
