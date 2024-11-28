@@ -25,6 +25,7 @@ class User(Base):
     avatar_id: Mapped[str] = mapped_column(sqlalchemy.types.String(256), nullable=True)
     bio: Mapped[str] = mapped_column(sqlalchemy.types.String(256), nullable=True)
     role: Mapped[Role] = mapped_column(sqlalchemy.types.SmallInteger, default=0)
+    birthday: Mapped[datetime.datetime] = mapped_column(sqlalchemy.types.DateTime, nullable=True)
     addresses: Mapped[List["Address"]] = relationship(back_populates="user")
     stores: Mapped[List["Store"]] = relationship("Store", back_populates="owner")
     cart_items: Mapped[List["CartItem"]] = relationship(back_populates="user")

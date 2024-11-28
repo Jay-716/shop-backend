@@ -16,6 +16,7 @@ class UserRead(BaseModel):
     avatar_id: Optional[str] = None
     bio: Optional[str] = None
     role: Role
+    birthday: Optional[datetime.datetime] = None
     created_at: datetime.datetime
     updated_at: datetime.datetime
 
@@ -33,6 +34,7 @@ class UserUpdate(BaseModel):
     gender: Optional[int] = None
     bio: Optional[str] = None
     password: Optional[str] = None
+    birthday: Optional[datetime.datetime] = None
 
 
 class AddressRead(BaseModel):
