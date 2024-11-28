@@ -89,7 +89,7 @@ def get_user_profile(user: User = Depends(current_user), db: Session = Depends(g
     return UserProfile(
         reg_days=reg_days,
         order_count=order_count,
-        good_count=good_count,
+        good_count=good_count if good_count else 0,
         comment_count=comment_count,
         timeline=timeline
     )
