@@ -50,7 +50,7 @@ def key_exist_validator(v: str) -> str:
     return v
 
 
-@file_router.post("/upload", dependencies=[Depends(current_superuser)])
+@file_router.post("/upload")
 async def upload_file(file: UploadFile, key: Annotated[str, Query(), AfterValidator(key_validator)]) -> UploadResult:
     try:
         storage_dst = STORAGE_PATH / key
@@ -67,7 +67,7 @@ async def upload_file(file: UploadFile, key: Annotated[str, Query(), AfterValida
     return UploadResult(ok=True, key=key)
 
 
-@file_router.get("/download", dependencies=[Depends(current_user)])
+@file_router.get("/download")
 def download_file(key: Annotated[str, Query(), AfterValidator(key_exist_validator)]) -> FileResponse:
     try:
         file_path = STORAGE_PATH / str(key)
