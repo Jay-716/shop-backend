@@ -99,10 +99,12 @@ def create_full_good(good_dict: GoodFullCreate, user: User = Depends(current_use
     store = db.get(Store, good_dict.store_id)
     if not store or (user.role != Role.Admin and store.owner_id != user.id):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Store not found.")
-    tag_ids_set = set(good_dict.tag_ids)
-    tags = db.execute(select(func.count(Tag.id)).where(Tag.id.in_(tag_ids_set))).scalar_one()
-    if tags != len(tag_ids_set):
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Tag not found.")
+    tag_ids_set = set()
+    if good_dict.tag_ids:
+        tag_ids_set = set(good_dict.tag_ids)
+        tags = db.execute(select(func.count(Tag.id)).where(Tag.id.in_(tag_ids_set))).scalar_one()
+        if tags != len(tag_ids_set):
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Tag not found.")
     good = Good(**good_dict.model_dump(exclude_none=True, exclude={"details", "styles", "tag_ids"}))
     db.add(good)
     db.flush()
