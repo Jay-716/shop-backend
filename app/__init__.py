@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from config import api_root, enable_doc, allow_origins
 from .auth import auth_router
 from app.routers.user import address_router, user_router
-from app.routers.store import store_router
+from app.routers.store import store_router, store_good_router
 from app.routers.good import good_router, tag_router
 from app.routers.order import order_router
 from app.routers.pay import pay_router
@@ -33,6 +33,7 @@ app.include_router(auth_router)
 app.include_router(address_router)
 app.include_router(user_router)
 app.include_router(store_router)
+app.include_router(store_good_router)
 app.include_router(good_router)
 app.include_router(tag_router)
 app.include_router(order_router)

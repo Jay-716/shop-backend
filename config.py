@@ -15,3 +15,5 @@ with open("config.yaml") as config:
     api_root = cfg["api_root"]
     enable_doc = cfg["enable_doc"]
     allow_origins = cfg["allow_origins"]
+    redis_host = cfg["redis"]["host"]
+    redis_port = cfg["redis"]["port"]

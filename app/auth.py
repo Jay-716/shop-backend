@@ -13,6 +13,7 @@ from sqlalchemy import select, update
 
 from .db import get_session
 from .models.user import User, Role
+from .models.store import Store
 from .schemas.user import UserCreate, UserRead, UserUpdate
 from config import SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES, api_root
 from .utils.log_utils import logger
@@ -85,6 +86,15 @@ async def current_superuser(user: Annotated[User, Depends(current_user)]) -> Use
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
                             detail="You don't have permission to perform this action")
     return user
+
+
+async def current_store(user: Annotated[User, Depends(current_user)], db: Session = Depends(get_session)) -> Store:
+    store = db.execute(
+        select(Store).where(Store.owner_id == user.id).order_by(Store.created_at.desc())
+    ).scalar_one_or_none()
+    if not store:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="You don't have any store.")
+    return store
 
 
 def create_user(user_dict: UserCreate, db: Session) -> UserRead:
