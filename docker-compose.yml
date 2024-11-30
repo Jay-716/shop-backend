@@ -1,0 +1,49 @@
+services:
+  backend:
+    container_name: shop-api
+    image: shop-api
+    build: .
+    restart: on-failure
+    volumes:
+      - type: bind
+        source: /srv/shop/log
+        target: /var/log/shop/
+      - type: bind
+        source: ./config.yaml
+        target: /code/config.yaml
+    ports:
+      - 8087:8000
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      ALGORITHM_URL: "http://host.docker.internal:8006"
+      ALGORITHM_TIMEOUT: 60
+    depends_on:
+      mysql:
+        condition: "service_healthy"
+
+  mysql:
+    image: mysql:8.0.36-debian
+    restart: on-failure
+    volumes:
+      - type: bind
+        source: /srv/shop/mysql
+        target: /var/lib/mysql
+    ports:
+      - 3306
+    environment:
+      MYSQL_USER: shop-user
+      MYSQL_PASSWORD: 4db1593a8c8271da
+      MYSQL_RANDOM_ROOT_PASSWORD: 1
+      MYSQL_DATABASE: shop
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 5s
+      retries: 20
+
+  redis:
+    image: redis:7.2.4-bookworm
+    restart: on-failure
+    ports:
+      - 6379
+
