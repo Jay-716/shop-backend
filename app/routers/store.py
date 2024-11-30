@@ -134,6 +134,7 @@ def get_store_good_profile(good_id: int, store: Store = Depends(current_store), 
     timeline = db.execute(query).all()
     day_good_count = db.execute(
         select(func.sum(OrderItem.count))
+        .join(Good, Good.id == OrderItem.good_id)
         .where(Good.id == good_id)
         .where(Good.store_id == store.id)
         .where(func.extract("YEAR", OrderItem.created_at) == datetime.datetime.now().year)
@@ -142,6 +143,7 @@ def get_store_good_profile(good_id: int, store: Store = Depends(current_store), 
     ).scalar_one()
     month_good_count = db.execute(
         select(func.sum(OrderItem.count))
+        .join(Good, Good.id == OrderItem.good_id)
         .where(Good.id == good_id)
         .where(Good.store_id == store.id)
         .where(func.extract("YEAR", OrderItem.created_at) == datetime.datetime.now().year)
