@@ -24,5 +24,5 @@ RUN chmod +x /code/docker-entrypoint.sh
 
 ENTRYPOINT ["/code/docker-entrypoint.sh"]
 
-CMD ["uvicorn", "--workers", "4", "--host", "0.0.0.0", "--port", "8000", "--log-config=log.yaml", "app:app"]
+CMD ["uvicorn", "--workers", "4", "--host", "0.0.0.0", "--port", "8000", "app:app"]
 
