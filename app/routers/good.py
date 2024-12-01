@@ -22,7 +22,7 @@ tag_router = APIRouter(prefix="/tag", tags=["商品", "标签"])
 @good_router.get("/random", dependencies=[Depends(current_user)], summary="主页获取随机商品")
 def get_random_good(db: Session = Depends(get_session)) -> List[GoodRead]:
     total_good = db.execute(select(func.count(Good.id))).scalar_one()
-    subquery = select(Good).offset(random.randint(1, max(total_good - 100, 1))).limit(100).subquery()
+    subquery = select(Good).offset(random.randint(0, max(total_good - 100, 0))).limit(100).subquery()
     query = select(subquery, func.random().label("_rand_num")).order_by("_rand_num")
     return db.execute(query).all()
 
@@ -30,7 +30,7 @@ def get_random_good(db: Session = Depends(get_session)) -> List[GoodRead]:
 @tag_router.get("/random", dependencies=[Depends(current_user)], summary="主页获取随机tag")
 def get_random_tag(db: Session = Depends(get_session)) -> List[TagRead]:
     total_tag = db.execute(select(func.count(Tag.id))).scalar_one()
-    subquery = select(Tag).offset(random.randint(1, max(total_tag - 50, 1))).limit(50).subquery()
+    subquery = select(Tag).offset(random.randint(0, max(total_tag - 50, 0))).limit(50).subquery()
     query = select(subquery, func.random().label("_rand_num")).order_by("_rand_num")
     return db.execute(query).all()
 
