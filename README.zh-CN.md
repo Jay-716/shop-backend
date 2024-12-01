@@ -23,7 +23,7 @@
 
 ## 启动项目
 
-首先根据`config.py`创建`config.yaml`。
+首先根据`config.py`创建`config.yaml`。（参考`config.yaml.example`）
 
 ### Docker
 

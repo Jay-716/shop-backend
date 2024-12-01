@@ -23,7 +23,7 @@ This is the recommended requirements. Older versions may work but is not tested.
 
 ## Usage
 
-Create your own `config.yaml` according to `config.py` first.
+Create your own `config.yaml` according to `config.py` first. (See `config.yaml.example`)
 
 ### Docker
 

@@ -1,0 +1,26 @@
+api_root: "/"
+enable_doc: true
+
+allow_origins:
+  - http://localhost
+  - http://localhost:5173
+
+database:
+  user: some-user
+  password: some-password
+  host: mysql-host
+  db_name: some-db
+
+auth:
+  secret_key: you_can_generate_one_with_openssl
+  algorithm: HS256
+  access_token_expire_minutes: 60
+
+storage:
+  storage_path: /path/to/storage
+  file_block_size: 4096
+  log_storage_path: /path/to/log
+
+redis:
+  host: redis-host
+  port: 6379
