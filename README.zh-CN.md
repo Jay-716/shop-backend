@@ -1,5 +1,9 @@
 # shop-backend
 
+[English](https://github.com/Jay-716/shop-backend/blob/master/README.md) | *简体中文*
+
+---
+
 一个基于FastAPI的在线商城后端。
 
 本仓库将于**3个月后**转为私有。

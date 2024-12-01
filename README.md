@@ -1,5 +1,9 @@
 # shop-backend
 
+*English* | [简体中文](https://github.com/Jay-716/shop-backend/blob/master/README.zh-CN.md)
+
+---
+
 A backend api implementation for an online shopping website, based on FastAPI.
 
 This repo will stay in public for **3 months only**!
