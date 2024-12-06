@@ -16,6 +16,7 @@ from app.models.good import Good
 from app.models.order import OrderItem, Order
 from app.models.user import User, Role, Address
 from app.models.store import Store
+from app.models.notification import Notification
 from app.schemas.user import AddressRead
 from app.schemas.good import GoodRead
 from app.schemas.order import OrderItemFullRead
@@ -168,6 +169,9 @@ def send_store_good(order_item_id: int, store: Store = Depends(current_store),
     order = db.get(Order, order_item.order_id)
     if all(rdb.get(f"order_item_{o.id}") for o in order.order_items):
         order.status = 2
+        notif = Notification(user_id=order.user_id, title=f"您的订单#{order.id}已发货。",
+                             content=f"您有一笔订单已发货，订单号：#{order.id}，请注意签收。")
+        db.add(notif)
         db.commit()
         threading.Thread(
             target=send_mail,

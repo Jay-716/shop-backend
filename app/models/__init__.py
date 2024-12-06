@@ -4,6 +4,7 @@ from .order import CartItem, Order, OrderItem
 from .user import User, Address, Role
 from .store import Store
 from .pay import Payment
+from .notification import Notification
 
 
 __all__ = [
@@ -13,4 +14,5 @@ __all__ = [
     User, Address, Role,
     Store,
     Payment,
+    Notification,
 ]
