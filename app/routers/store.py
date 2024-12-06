@@ -1,4 +1,5 @@
 import datetime
+import threading
 from typing import Dict, List, Tuple
 
 import sqlalchemy
@@ -19,6 +20,7 @@ from app.schemas.user import AddressRead
 from app.schemas.good import GoodRead
 from app.schemas.order import OrderItemFullRead
 from app.schemas.store import StoreRead, StoreCreate, StoreUpdate, StoreProfile, StoreGoodProfile
+from app.services.mail import send_mail
 
 
 store_router = APIRouter(prefix="/store", tags=["店铺"])
@@ -167,6 +169,11 @@ def send_store_good(order_item_id: int, store: Store = Depends(current_store),
     if all(rdb.get(f"order_item_{o.id}") for o in order.order_items):
         order.status = 2
         db.commit()
+        threading.Thread(
+            target=send_mail,
+            args=(order.user.email, order.id, f"您的订单#{order.id}已发货。"),
+            daemon=True
+        ).start()
     return True
 
 

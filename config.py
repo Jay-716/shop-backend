@@ -17,3 +17,10 @@ with open("config.yaml") as config:
     allow_origins = cfg["allow_origins"]
     redis_host = cfg["redis"]["host"]
     redis_port = cfg["redis"]["port"]
+    # mail
+    smtp_server = cfg["mail"]["smtp_server"]
+    smtp_port = cfg["mail"]["smtp_port"]
+    account_name = cfg["mail"]["account_name"]
+    account_password = cfg["mail"]["account_password"]
+    account = cfg["mail"]["account"]
+    subject = cfg["mail"]["subject"]
