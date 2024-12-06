@@ -54,6 +54,7 @@ app: Program source.
  - models: sqlalchemy orm models.
  - routers: API endpoints. Main API logic.
  - schemas: API params and output schemas.
+ - services: Common app services, e.g. sending email.
  - utils: Utilities.
  - auth.py: Authentication logic.
  - db.py: Database sessions.

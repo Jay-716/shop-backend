@@ -54,6 +54,7 @@ app: 应用源码。
  - models: sqlalchemy ORM 模型.
  - routers: API入口点与主要业务逻辑。
  - schemas: API参数与返回值schema.
+ - services: 通用应用服务。比如发送邮件。
  - utils: 实用工具。
  - auth.py: 鉴权逻辑。
  - db.py: 数据库会话管理。
