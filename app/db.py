@@ -13,8 +13,8 @@ REDIS_HOST = redis_host
 REDIS_PORT = redis_port
 
 
-engine = create_engine(DATABASE_URL)
-async_engine = create_async_engine(DATABASE_URL_ASYNC)
+engine = create_engine(DATABASE_URL, pool_pre_ping=True)
+async_engine = create_async_engine(DATABASE_URL_ASYNC, pool_pre_ping=True)
 async_session_maker = async_sessionmaker(async_engine, expire_on_commit=False)
 
 
