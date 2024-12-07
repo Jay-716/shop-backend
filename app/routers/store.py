@@ -187,7 +187,7 @@ def get_order_item_status(order_item_id: int, store: Store = Depends(current_sto
     order_item = db.get(OrderItem, order_item_id)
     if not order_item or order_item.good.store_id != store.id:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Order item not found.")
-    if rdb.get(f"order_item_{order_item_id}") == 1:
+    if rdb.get(f"order_item_{order_item_id}") == b"1":
         return True
     else:
         return False
