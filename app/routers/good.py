@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi_pagination import Page
 from fastapi_pagination.ext.sqlalchemy import paginate
 from sqlalchemy.orm import Session
-from sqlalchemy import select, update, delete, func
+from sqlalchemy import select, update, delete, func, or_
 
 from app.db import get_session
 from app.auth import current_user, current_superuser
@@ -53,6 +53,14 @@ def get_all_good(user: User = Depends(current_user), db: Session = Depends(get_s
     query = select(Good).join(Store, Store.id == Good.store_id)
     if user.role != Role.Admin:
         query = query.where(Store.owner_id == user.id)
+    return paginate(db, query)
+
+
+@good_router.get("/search", dependencies=[Depends(current_user)])
+def get_all_good(q: Optional[str] = None, db: Session = Depends(get_session)) -> Page[GoodRead]:
+    query = select(Good)
+    if q:
+        query = query.where(or_(Good.name.like(f"%{q}%"), Good.description.like(f"%{q}%")))
     return paginate(db, query)
 
 
